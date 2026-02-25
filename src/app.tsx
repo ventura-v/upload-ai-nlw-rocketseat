@@ -1,18 +1,24 @@
 import { Button } from "./components/ui/button";
 import { Separator } from "./components/ui/separator";
-import { Github, Wand2 } from "lucide-react"
+import { Wand2 } from "lucide-react";
 import { Textarea } from "./components/ui/textarea";
 import { Label } from "./components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
 import { Slider } from "./components/ui/slider";
 import { VideoInputForm } from "./components/video-input-form";
 import { PromptSelect } from "./components/prompt-select";
 import { useState } from "react";
-import { useCompletion } from 'ai/react'
+import { useCompletion } from "ai/react";
 
 export function App() {
-  const [temperature, setTemperature] = useState(0.5)
-  const [videoId, setVideoId] = useState<string | null>(null)
+  const [temperature, setTemperature] = useState(0.5);
+  const [videoId, setVideoId] = useState<string | null>(null);
 
   const {
     input,
@@ -22,15 +28,16 @@ export function App() {
     completion,
     isLoading,
   } = useCompletion({
-    api: 'http://localhost:3333/ai/complete', // endereço da rota que irá gerar o completion da AI
+    api: "http://localhost:3333/ai/complete", // endereço da rota que irá gerar o completion da AI
     body: {
       videoId,
       temperature,
     },
     headers: {
-      'Content-Type': 'application/json',
-    }
-  })
+      "Content-Type": "application/json",
+    },
+    streamProtocol: "text",
+  });
 
   return (
     // fazer a div ocupar toda a tela
@@ -39,61 +46,84 @@ export function App() {
         <h1 className="text-xl font-bold">upload.ai</h1>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">Desenvolvido com 💜 no NLW da Rocketseat</span>
+          <span className="text-sm text-muted-foreground flex gap-1 items-center">
+            Criado por
+            <a
+              href="https://portfolio.venturadev.site"
+              target="_blank"
+              className="text-[#00d9ff] flex items-center"
+            >
+              Vinicius Ventura
+              <img
+                src="../public/logo.svg"
+                alt="Logo"
+                className="ml-1 h-5 w-5"
+              />
+            </a>
+          </span>
 
-          <Separator className="h-6" orientation="vertical"/>
+          <Separator className="h-6" orientation="vertical" />
 
-          <Button variant="outline">
-            <Github className="m-4 h-4 mr-2"/>
-            Github
-          </Button>
-
-      
-
+          <a
+            href="https://github.com/ventura-v/upload-ai-nlw-rocketseat"
+            target="_blank"
+          >
+            <Button variant="outline" className="flex justify-between gap-2">
+              <img
+                src="../public/github.svg"
+                alt="GitHub"
+                className="ml-1 h-4 w-4"
+              />
+              Github
+            </Button>
+          </a>
         </div>
       </div>
 
       <main className="flex flex-1 p-6 gap-6">
         <div className="flex flex-col flex-1 gap-4">
           <div className="grid grid-rows-2 gap-4 flex-1">
-            <Textarea 
+            <Textarea
               className="resize-none p-4 leading-relaxed"
               placeholder="Inclua o prompt para a IA..."
               value={input}
               onChange={handleInputChange}
             />
-            <Textarea 
+            <Textarea
               className="resize-none p-4 leading-relaxed"
-              placeholder="Resultado gerado pela IA..." 
+              placeholder="Resultado gerado pela IA..."
               readOnly
               value={completion}
             />
           </div>
-          
+
           <p className="text-sm text-muted-foreground">
-            Lembre-se: você pode utilizar a variável <code className="text-violet-400">{'{transcription}'}</code> no seu prompt para adicionar o conteúdo da transcrição do vídeo selecionado.</p>
+            Lembre-se: você pode utilizar a variável{" "}
+            <code className="text-[#facc15]">{"{transcription}"}</code> no seu
+            prompt para adicionar o conteúdo da transcrição do vídeo
+            selecionado.
+          </p>
         </div>
 
         <aside className="w-80 space-y-6">
-          
-          <VideoInputForm onVideoUploaded={setVideoId}/>
+          <VideoInputForm onVideoUploaded={setVideoId} />
 
           <Separator />
 
           <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
+            <div className="space-y-2">
               <Label>Prompt</Label>
-              <PromptSelect onPromptSelected={setInput}/>
+              <PromptSelect onPromptSelected={setInput} />
             </div>
 
             <div className="space-y-2">
               <Label>Modelo</Label>
-              <Select defaultValue="gpt3.5" disabled>
+              <Select defaultValue="gemini3" disabled>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="gpt3.5">GPT 3.5-turbo 16k</SelectItem>
+                  <SelectItem value="gemini3">Gemini 3 Flash</SelectItem>
                 </SelectContent>
               </Select>
               <span className="block text-xs text-muted-foreground italic">
@@ -105,15 +135,16 @@ export function App() {
 
             <div className="space-y-4">
               <Label>Temperatura</Label>
-              <Slider 
+              <Slider
                 min={0}
                 max={1}
                 step={0.1}
                 value={[temperature]}
-                onValueChange={value => setTemperature(value[0])}
+                onValueChange={(value) => setTemperature(value[0])}
               />
               <span className="block text-xs text-muted-foreground italic leading-relaxed">
-                Valores mais altos tendem a deixar o resultado mais criativo e com possíveis erros.
+                Valores mais altos tendem a deixar o resultado mais criativo e
+                com possíveis erros.
               </span>
             </div>
 
@@ -124,9 +155,8 @@ export function App() {
               <Wand2 className="w-4 h-4 ml-2" />
             </Button>
           </form>
-
         </aside>
       </main>
     </div>
-  )
+  );
 }
