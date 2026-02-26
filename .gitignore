@@ -8,6 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+upload-ai-api/node_modules
+upload-ai-api/.env
+upload-ai-api/example.mp3
+upload-ai-api/routes.http
+upload-ai-api/tmp/*
 dist
 dist-ssr
 *.local

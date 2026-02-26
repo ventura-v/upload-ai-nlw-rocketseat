@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// criação dos models (cada model representa um banco de dados)
+model Video {
+  id String @id @default(uuid())
+  name String // nome do vídeo
+  path String // caminho onde o vídeo será salvo
+  transcription String? // está como opcional porque primeiro é feito o upload do vídeo e só depois a transcrição é gerada
+  createAt DateTime @default(now()) // data da criação - útil para logs
+}
+
+model Prompt {
+  id String @id @default(uuid())
+  title String // referência para o usuário escolher
+  template String // conteúdo gerado pela IA
+}
